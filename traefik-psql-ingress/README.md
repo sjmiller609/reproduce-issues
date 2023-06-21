@@ -21,3 +21,8 @@ watch kubectl get pods -n customer-1
 ```
 - Try connecting to postgres, waiting for pod to be ready
 - Delete the pod, and try connecting again (see script output)
+
+## Debug information
+
+- http://localhost:9000/api/rawdata
+- http://localhost:9000/dashboard#/
