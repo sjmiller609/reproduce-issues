@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: customer-1
+---
+apiVersion: coredb.io/v1alpha1
+kind: CoreDB
+metadata:
+  name: sample-coredb
+  namespace: customer-1
+spec:
+  stop: false
+  extensions: []

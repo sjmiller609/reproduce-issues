@@ -1,0 +1,16 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  name: hippo-1
+  namespace: customer-1
+spec:
+  entryPoints:
+    - postgresql
+  routes:
+  - match: HostSNI(`localhost`)
+    services:
+      - name: sample-coredb
+        port: 5432
+  tls:
+    passthrough: true
