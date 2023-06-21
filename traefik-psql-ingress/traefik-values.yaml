@@ -9,12 +9,27 @@ service:
   type: NodePort
 additionalArguments:
   - "--entryPoints.postgresql.address=:5432/tcp"
+  - "--api=true"
+  - "--api.insecure=true"
+  - "--api.debug=true"
 ports:
   postgresql:
     expose: true
     port: 5432
     exposedPort: 5432
     nodePort: 32432
+    protocol: TCP
+  web:
+    expose: true
+    port: 8080
+    exposedPort: 8080
+    nodePort: 32430
+    protocol: TCP
+  traefik:
+    expose: true
+    port: 9000
+    exposedPort: 9000
+    nodePort: 32431
     protocol: TCP
 deployment:
   replicas: 1
