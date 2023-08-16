@@ -18,7 +18,7 @@ rm -rf tembo
 helm repo add traefik https://traefik.github.io/charts
 helm repo update
 kubectl create namespace traefik || true
-helm upgrade --install --namespace=traefik --values=./traefik-values.yaml traefik traefik/traefik
+helm upgrade --version 20.8.0 --install --namespace=traefik --values=./traefik-values.yaml traefik traefik/traefik
 
 # Deploy postgres, waiting for operator to be ready
 until kubectl apply -f ./postgres.yaml; do
