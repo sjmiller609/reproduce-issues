@@ -7,11 +7,21 @@ services:
       - db
     environment:
       - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
-    # ports:
-    #   - "8000:8000" # Adjust the ports as per your application's needs
 
   db:
     image: postgres:latest
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+
+  hello-world-client:
+    image: curlimages/curl
+    depends_on:
+      - app
+    command: /bin/sh -c "while true; do sleep 1; curl -s http://app:8080/; done"
+
+  health-check-client:
+    image: curlimages/curl
+    depends_on:
+      - app
+    command: /bin/sh -c "while true; do sleep 1; curl -s http://app:8080/lively; done"

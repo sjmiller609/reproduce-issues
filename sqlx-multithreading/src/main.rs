@@ -58,7 +58,7 @@ async fn main() -> std::io::Result<()> {
                     .fetch_one(&db_pool_clone)
                     .await
                 {
-                    Ok(_) => println!("Background query executed successfully."),
+                    Ok(_) => {},
                     Err(e) => eprintln!("Background query failed: {:?}", e),
                 }
                 tokio::time::sleep(time::Duration::from_secs(1)).await;
@@ -75,7 +75,8 @@ async fn main() -> std::io::Result<()> {
             .app_data(web::Data::new(background_threads.clone()))
             .route("/", web::get().to(hello))
     })
-    .bind("127.0.0.1:8080")?
+    .workers(8)
+    .bind(("0.0.0.0", 8080))?
     .run()
     .await
 }

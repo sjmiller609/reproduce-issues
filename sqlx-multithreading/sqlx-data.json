@@ -1,0 +1,39 @@
+{
+  "db": "PostgreSQL",
+  "33e4216aa335ce2ce0f3866919848476ad3c50bfde07e341f4e679e8f34d6463": {
+    "describe": {
+      "columns": [
+        {
+          "name": "hello",
+          "ordinal": 0,
+          "type_info": "Int4"
+        }
+      ],
+      "nullable": [
+        null
+      ],
+      "parameters": {
+        "Left": []
+      }
+    },
+    "query": "SELECT 1 as hello"
+  },
+  "e19897851ad9fa66c820f97103b935e58614518b81cf66575a552b9d9113395a": {
+    "describe": {
+      "columns": [
+        {
+          "name": "pg_sleep",
+          "ordinal": 0,
+          "type_info": "Void"
+        }
+      ],
+      "nullable": [
+        null
+      ],
+      "parameters": {
+        "Left": []
+      }
+    },
+    "query": "SELECT pg_sleep(5)"
+  }
+}
