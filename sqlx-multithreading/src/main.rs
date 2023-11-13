@@ -42,7 +42,7 @@ async fn main() -> std::io::Result<()> {
     // Set up database connection pool
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     let db_pool = PgPoolOptions::new()
-        .max_connections(5)
+        .max_connections(2)
         .connect(&database_url)
         .await
         .expect("Failed to create pool");
@@ -50,7 +50,7 @@ async fn main() -> std::io::Result<()> {
     let background_threads: Arc<Mutex<Vec<tokio::task::JoinHandle<()>>>> =
         Arc::new(Mutex::new(Vec::new()));
 
-    for _ in 0..5 {
+    for _ in 0..10 {
         let db_pool_clone = db_pool.clone();
         let bg_thread = tokio::spawn(async move {
             loop {
