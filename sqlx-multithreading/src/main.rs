@@ -7,7 +7,7 @@ use tokio;
 
 async fn hello(db_pool: web::Data<PgPool>) -> impl Responder {
     // Execute a simple query against the database
-    match sqlx::query!("SELECT 1 as hello")
+    match sqlx::query!("SELECT pg_sleep(1)")
         .fetch_one(&**db_pool)
         .await
     {
@@ -54,7 +54,7 @@ async fn main() -> std::io::Result<()> {
         let db_pool_clone = db_pool.clone();
         let bg_thread = tokio::spawn(async move {
             loop {
-                match sqlx::query!("SELECT pg_sleep(5)")
+                match sqlx::query!("SELECT pg_sleep(1)")
                     .fetch_one(&db_pool_clone)
                     .await
                 {
