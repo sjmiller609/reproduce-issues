@@ -50,21 +50,24 @@ async fn main() -> std::io::Result<()> {
     let background_threads: Arc<Mutex<Vec<tokio::task::JoinHandle<()>>>> =
         Arc::new(Mutex::new(Vec::new()));
 
-    let db_pool_clone = db_pool.clone();
-    let bg_thread = tokio::spawn(async move {
-        loop {
-            match sqlx::query!("SELECT pg_sleep(5)")
-                .fetch_one(&db_pool_clone)
-                .await
-            {
-                Ok(_) => println!("Background query executed successfully."),
-                Err(e) => eprintln!("Background query failed: {:?}", e),
+    for _ in 0..5 {
+        let db_pool_clone = db_pool.clone();
+        let bg_thread = tokio::spawn(async move {
+            loop {
+                match sqlx::query!("SELECT pg_sleep(5)")
+                    .fetch_one(&db_pool_clone)
+                    .await
+                {
+                    Ok(_) => println!("Background query executed successfully."),
+                    Err(e) => eprintln!("Background query failed: {:?}", e),
+                }
+                tokio::time::sleep(time::Duration::from_secs(1)).await;
             }
-            tokio::time::sleep(time::Duration::from_secs(1)).await;
-        }
-    });
+        });
 
-    background_threads.lock().unwrap().push(bg_thread);
+        background_threads.lock().unwrap().push(bg_thread);
+    }
+
     // Start HTTP server
     HttpServer::new(move || {
         App::new()
