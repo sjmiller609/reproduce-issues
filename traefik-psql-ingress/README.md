@@ -1,3 +1,7 @@
+# UPDATE: resolved
+
+https://github.com/traefik/traefik/pull/10089#issuecomment-1773515235
+
 # Reproduce issue with psql hanging during pod restart
 
 ## Dependencies:
