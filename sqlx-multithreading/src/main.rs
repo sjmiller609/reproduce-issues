@@ -53,7 +53,7 @@ async fn main() -> std::io::Result<()> {
     let db_pool_clone = db_pool.clone();
     let bg_thread = tokio::spawn(async move {
         loop {
-            match sqlx::query!("SELECT 1 as background")
+            match sqlx::query!("SELECT pg_sleep(5)")
                 .fetch_one(&db_pool_clone)
                 .await
             {
