@@ -9,3 +9,4 @@ edition = "2021"
 actix-web = "4.3.0"
 env_logger = "0.10.1"
 sqlx = { version = "0.6", features = [ "runtime-tokio-native-tls" , "postgres", "chrono", "json", "offline"  ] }
+tokio = { version = "1.23.0", features = ["full"] }
