@@ -1,4 +1,4 @@
-use actix_web::{web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{web, get, App, HttpResponse, HttpServer, Responder};
 use sqlx::postgres::PgPoolOptions;
 use sqlx::PgPool;
 use std::{env, time};
@@ -14,6 +14,26 @@ async fn hello(db_pool: web::Data<PgPool>) -> impl Responder {
         Ok(_) => HttpResponse::Ok().body("Hello World!"),
         Err(e) => HttpResponse::InternalServerError().body(format!("Error: {}", e)),
     }
+}
+
+#[get("/lively")]
+pub async fn background_threads_running(
+    background_threads: web::Data<Arc<Mutex<Vec<tokio::task::JoinHandle<()>>>>>,
+) -> impl Responder {
+    let background_threads = match background_threads.lock() {
+        Ok(threads) => threads,
+        Err(_) => {
+            return HttpResponse::InternalServerError()
+                .body("Failed to check if background tasks are running.")
+        }
+    };
+    for thread in background_threads.iter() {
+        if thread.is_finished() {
+            return HttpResponse::InternalServerError()
+                .body("One or more background tasks are not running.");
+        }
+    }
+    HttpResponse::Ok().json("ok")
 }
 
 #[actix_web::main]
@@ -40,7 +60,7 @@ async fn main() -> std::io::Result<()> {
                 Ok(_) => println!("Background query executed successfully."),
                 Err(e) => eprintln!("Background query failed: {:?}", e),
             }
-            tokio::time::sleep(time::Duration::from_secs(10)).await;
+            tokio::time::sleep(time::Duration::from_secs(1)).await;
         }
     });
 
@@ -49,6 +69,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(db_pool.clone()))
+            .app_data(web::Data::new(background_threads.clone()))
             .route("/", web::get().to(hello))
     })
     .bind("127.0.0.1:8080")?
